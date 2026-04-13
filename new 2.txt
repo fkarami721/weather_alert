@@ -1,0 +1,10 @@
+"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"
+ "AIzaSyA7EOWKrXChhYIOJLNm7aPp4l_NVc5-M7k"
+
+
+
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+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
+LANGSMITH_PROJECT="weather_alert_sys"
+
