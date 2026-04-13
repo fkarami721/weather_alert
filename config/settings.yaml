@@ -1,0 +1,118 @@
+system:
+  date_mode_run: "20260412T12Z"
+  base_url: "https://dd.weather.gc.ca/20260412/WXO-DD/model_hrdps/continental/2.5km/12/"
+  data_dir: "data"
+  output_dir: "output"
+
+# PHASE 1: Define the exact HRDPS variables to download
+datasets:
+  snow_probability:
+    variable_code: "MSC_HRDPS-WEonG_PROBSN_Sfc"
+  conditional_snow_accumulation:
+    variable_code: "MSC_HRDPS-WEonG_CONDASSN_Sfc"
+  snow_squall_probability:
+    variable_code: "MSC_HRDPS-WEonG_PROBSNSQ_Sfc"
+  gust_max:
+    variable_code: "MSC_HRDPS_GUST-Max_AGL-10m"
+  conditional_rain_accumulation:
+    variable_code: "MSC_HRDPS-WEonG_CONDALPCPN_Sfc"
+  rain_probability:
+    variable_code: "MSC_HRDPS-WEonG_PROBLPCPN_Sfc"
+  temperature:
+    variable_code: "MSC_HRDPS-WEonG_TMP_Sfc"
+  freezing_rain_probability:
+    variable_code: "MSC_HRDPS-WEonG_PROBFZRA_Sfc"
+  conditional_freezing_rain_accumulation:
+    variable_code: "MSC_HRDPS-WEonG_CONDAFZPCPN_Sfc"
+  wind_gust:
+    variable_code: "MSC_HRDPS-WEonG_GUST_Sfc"
+  sustained_wind_speed:
+    variable_code: "MSC_HRDPS-WEonG_WSPD_Sfc"
+  # You can easily add new ones here, like total_accumulated_precip: "APCP"
+
+# PHASE 2: Define the alerts, linking them to a dataset and setting thresholds
+alert_tiers:
+  snow_events:
+    dataset:
+      [
+        "snow_probability",
+        "conditional_snow_accumulation",
+        "snow_squall_probability",
+        "gust_max",
+      ]
+    tiers:
+      snowfall_advisory:
+        prob_min_threshold: 80 # %
+        accum_min_threshold: 5 # snow accumulation (cm)
+        accum_max_threshold: 10
+        severity: Moderate
+        unit: "cm"
+      snowfall_warning:
+        prob_min_threshold: 80
+        accum_min_threshold: 15
+        severity: High
+        unit: "cm"
+      snow_squall:
+        prob_min_threshold: 50
+        accum_min_threshold: 3
+        gust_min_threshold: 25 #km/h
+        severity: Severe
+        unit: "cm"
+
+  rain_events:
+    dataset:
+      ["rain_probability", "conditional_rain_accumulation", "temperature"]
+    tiers:
+      rain_advisory:
+        prob_min_threshold: 60 # %
+        accum_min_threshold: 15 # rain accumulation in (mm)
+        temp_min_threshold: 0.5 # celsius
+        severity: Moderate
+        unit: "mm"
+      rain_warning:
+        prob_min_threshold: 70
+        accum_min_threshold: 25 # mm
+        temp_min_threshold: 0.5
+        severity: High
+        unit: "mm"
+      heavy_rain:
+        prob_min_threshold: 80
+        accum_min_threshold: 30 # mm
+        temp_min_threshold: 0.5
+        severity: Severe
+        unit: "mm"
+      significant_rain:
+        prob_min_threshold: 80
+        accum_min_threshold: 50 # mm
+        temp_min_threshold: 0.5
+        severity: Extreme
+        unit: "mm"
+
+  freezing_rain_events:
+    dataset:
+      [
+        "freezing_rain_probability",
+        "conditional_freezing_rain_accumulation",
+        "temperature",
+      ]
+    tiers:
+      freezing_rain_warning:
+        prob_min_threshold: 40
+        accum_min_threshold: 1 # mm
+        temp_max_threshold: 0 # celsius
+        severity: Severe
+        unit: "mm"
+
+  wind_events:
+    dataset: ["wind_gust", "sustained_wind_speed"]
+    tiers:
+      wind_warning:
+        wind_gust_min_threshold: 90 #km/h
+        sustained_wind_speed_min_threshold: 70 #km/h
+        severity: High
+        unit: "km/h"
+      extreme_wind:
+        wind_gust_min_threshold: 110 #km/h
+        sustained_wind_speed_min_threshold: 90 #km/h
+        severity: Severe
+        unit: "km/h"
