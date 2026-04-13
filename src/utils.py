@@ -84,7 +84,7 @@ def spatial_summary(alert_cells, lat, lon, alert_type, severity, unit, model_run
     # 4. Load your regions (Shapefile, GeoJSON, etc.)
     # regions = gpd.read_file(r"D:\Fahime\Fahim MSC\SnowAlert\CanPoly\forcast_region_canada.shp")
 
-    regions = gpd.read_file(r"D:\Fahime\Fahim MSC\SnowAlert\CanPoly\forcast_region_canada_5.shp")
+    regions = gpd.read_file(r".\src\polygon\forcast_region_canada_5.shp")
 
     # 5. Ensure the coordinate systems match!
     if regions.crs != gdf_points.crs:
